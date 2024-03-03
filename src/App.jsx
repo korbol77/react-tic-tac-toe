@@ -8,6 +8,7 @@ const App = () => {
   const [gameBoard, setGameBoard] = useState(Array(9).fill(null));
   const [playerTurn, setPlayerTurn] = useState("X");
   const [winner, setWinner] = useState(null);
+  const [winFields, setWinFields] = useState(null);
 
   const changePlayerTurn = () => {
     setPlayerTurn(playerTurn == "X" ? "O" : "X");
@@ -23,8 +24,9 @@ const App = () => {
         board[el2] == board[el3]
       ) {
         setWinner(playerTurn);
+        setWinFields(el);
       } else {
-        board.includes(null) ? changePlayerTurn() : setWinner("Tie");
+        board.includes(null) ? changePlayerTurn() : setWinner("tie");
       }
     });
   };
@@ -41,16 +43,17 @@ const App = () => {
     setGameBoard(Array(9).fill(null));
     setPlayerTurn("X");
     setWinner(null);
+    setWinFields(null);
   };
 
   return (
     <main className="h-svh flex flex-col justify-center items-center gap-5">
-      <h1 className="text-5xl font-black text-zinc-100 drop-shadow-[0_0_5px_rgba(244,244,245,0.5)]">
+      <h1 className="text-4xl sm:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-pink-500 to-blue-500">
         Tic-Tac-Toe
       </h1>
       {winner ? (
         <p className="text-2xl font-bold text-green-500">
-          Winner: <span className="underline">{winner}</span>
+          {winner == "tie" ? "Tie!" : `Winner ${winner}!`}
         </p>
       ) : (
         <p className="text-xl font-bold text-zinc-300">
@@ -62,9 +65,14 @@ const App = () => {
           </span>
         </p>
       )}
-      <GameBoard gameBoard={gameBoard} winner={winner} onClick={playerMove} />
+      <GameBoard
+        gameBoard={gameBoard}
+        winner={winner}
+        winFields={winFields}
+        onClick={playerMove}
+      />
       <button
-        className="flex gap-1 items-center [&>svg]:hover:animate-[spin_1s_ease-in-out_1] text-zinc-500 bg-red-600/20 rounded-lg px-2 py-0.5"
+        className="flex gap-1 items-center [&>svg]:hover:animate-[spin_1s_ease-in-out_1] text-zinc-500 hover:bg-zinc-100/10 duration-300 rounded-lg px-2 py-0.5"
         onClick={resetGame}
       >
         <ArrowPathIcon className="size-6" />
